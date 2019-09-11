@@ -28,7 +28,12 @@
                           smex
 			  nlinum
 			  monokai-theme
-                          solarized-theme
+			  w3
+			  multiple-cursors
+                          ubuntu-theme
+                          dracula-theme
+                          cmake-mode
+			  solarized-theme
                           web-mode
 			  yasnippet-classic-snippets
 			  yasnippet-snippets
