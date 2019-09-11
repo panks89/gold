@@ -28,7 +28,7 @@ void Safe_Queue<T>::put(T&& val)
   std::unique_ptr<Message<T>> uptr =
     std::make_unique<Message<T>>(std::move(val));
   std::lock_guard<std::mutex> lock(mtx); // lock_guard can lock only once
-  q.push_back(std::move(uptr));
+  q.push(std::move(uptr));
   cond.notify_one();
 }
 
