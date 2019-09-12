@@ -16,7 +16,9 @@ string getUserInput() {
 void DoBlockGetLine() {  
   while(true) {
     interruptionPoint();
-    std::future<string> future = async(std::launch::async, getUserInput);
+    std::packaged_task<std::string()> task(getUserInput);
+    std::future<string> future = task.get_future();
+    std::thread t(std::move(task)); t.detach();
     while (!threadLocalFlag.isSet()) {
       if (future.wait_for(std::chrono::seconds(1)) == std::future_status::ready) {
 	const string input { future.get() };
