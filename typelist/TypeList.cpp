@@ -4,7 +4,7 @@
 #include <iostream>
 #include <string>
 #include "typelist.h"
-//#include "GenScatterHierarchy.h"
+#include "GenScatterHierarchy.h"
 
 using namespace std;
 
@@ -57,14 +57,13 @@ int main()
   cout << "Type at " << 5 << ": " << typeid(TL::TypeAt<noints, 5>::result).name() << endl;
   cout << "Type at " << 6 << ": " << typeid(TL::TypeAt<noints, 6>::result).name() << endl;
   cout << "Type at " << 7 << ": " << typeid(TL::TypeAt<noints, 7>::result).name() << endl;
-  /*
+
   using WidgetInfo = TL::GenScatterHierarchy<types, TL::ObjectHolder>;
   WidgetInfo object;
   (static_cast<TL::ObjectHolder<string>&>(object)).value = "pankaj";
   (static_cast<TL::ObjectHolder<int>&>(object)).value = 6;
   cout << (static_cast<TL::ObjectHolder<string>&>(object)).value << endl;
   cout << (static_cast<TL::ObjectHolder<int>&>(object)).value << endl;
-  */
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu

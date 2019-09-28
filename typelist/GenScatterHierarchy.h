@@ -17,7 +17,7 @@ namespace TL {
 
   template <typename atomicType, template<typename> class Unit>
   struct GenScatterHierarchy : public Unit<atomicType> {
-    using LeftBase = typename Unit<atomicType>;
+    using LeftBase = Unit<atomicType>;
   };
 
   template <template<typename> class Unit>
