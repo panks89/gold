@@ -64,6 +64,10 @@ int main()
   (static_cast<TL::ObjectHolder<int>&>(object)).value = 6;
   cout << (static_cast<TL::ObjectHolder<string>&>(object)).value << endl;
   cout << (static_cast<TL::ObjectHolder<int>&>(object)).value << endl;
+  /* Using field wrapper */
+  cout << TL::Field<string>(object).value << endl;
+  cout << TL::Field<int>(object).value << endl;
+  //cout << TL::Field<float>(object).value << endl;
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
