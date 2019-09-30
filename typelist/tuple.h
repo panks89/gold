@@ -7,22 +7,23 @@
 namespace TL {
 
   namespace cpp14 {
-
     template <typename... types>
     struct VariadicTypelist;
+
+    template<>
+    struct VariadicTypelist<> {
+      using Result = ::TL::NullType;
+    };
     
     template <typename type, typename... types>
-    struct VariadicTypelistHelper {
+    struct VariadicTypelist<type, types...> {
       using Result = ::TL::typelist<type, typename VariadicTypelist<types...>::Result>;
     };
-    
-    template <typename... types>
-    struct VariadicTypelist {
-      static constexpr bool cond { sizeof...(types) == 0 };
-    public:
-      using Result = std::conditional_t<cond, ::TL::NullType, typename VariadicTypelistHelper<types...>::Result>;
-    };
   }
+
+  template<typename type, typename... types>
+  using tupleType = typename cpp14::VariadicTypelist<type, types...>::Result;
+
 }
 
 

@@ -71,13 +71,11 @@ int main()
   cout << TL::Field<0>(object).value << endl;
   //cout << TL::Field<5>(object).value << endl;
 
-  //using newtypes = TL::cpp14::VariadicTypelist<int, double, float, char, string>::Result;
-  //cout << " Size of newtypes : " << TL::Length<newtypes>::value << endl;
-
-  cout << ::TL::cpp14::VariadicTypelist<int>::cond << endl;
-  cout << ::TL::cpp14::VariadicTypelist<int, int>::cond << endl;
-  cout << ::TL::cpp14::VariadicTypelist<int, float>::cond << endl;
-  cout << ::TL::cpp14::VariadicTypelist<string>::cond << endl;
-    
-    
+  using tupleTypes = TL::tupleType<int, double, float, char, string>;
+  cout << " Size of newtypes : " << TL::Length<tupleTypes>::value << endl;
+  cout << "Type at " << 0 << ": " << typeid(TL::TypeAt<tupleTypes, 0>::result).name() << endl;
+  cout << "Type at " << 1 << ": " << typeid(TL::TypeAt<tupleTypes, 1>::result).name() << endl;
+  cout << "Type at " << 2 << ": " << typeid(TL::TypeAt<tupleTypes, 2>::result).name() << endl;
+  cout << "Type at " << 3 << ": " << typeid(TL::TypeAt<tupleTypes, 3>::result).name() << endl;
+  cout << "Type at " << 3 << ": " << typeid(TL::TypeAt<tupleTypes, 4>::result).name() << endl;
 }
