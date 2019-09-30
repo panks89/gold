@@ -1,7 +1,9 @@
 #include <iostream>
 #include <string>
 #include "typelist.h"
+#include "tuple.h"
 #include "GenScatterHierarchy.h"
+
 
 using namespace std;
 
@@ -68,4 +70,14 @@ int main()
   cout << TL::Field<1>(object).value << endl;
   cout << TL::Field<0>(object).value << endl;
   //cout << TL::Field<5>(object).value << endl;
+
+  //using newtypes = TL::cpp14::VariadicTypelist<int, double, float, char, string>::Result;
+  //cout << " Size of newtypes : " << TL::Length<newtypes>::value << endl;
+
+  cout << ::TL::cpp14::VariadicTypelist<int>::cond << endl;
+  cout << ::TL::cpp14::VariadicTypelist<int, int>::cond << endl;
+  cout << ::TL::cpp14::VariadicTypelist<int, float>::cond << endl;
+  cout << ::TL::cpp14::VariadicTypelist<string>::cond << endl;
+    
+    
 }
