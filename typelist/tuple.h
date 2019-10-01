@@ -3,6 +3,7 @@
 
 #include <type_traits>
 #include "typelist.h"
+#include "GenScatterHierarchy.h" 
 
 namespace TL {
 
@@ -21,9 +22,16 @@ namespace TL {
     };
   }
 
-  template<typename type, typename... types>
-  using tupleType = typename cpp14::VariadicTypelist<type, types...>::Result;
+  template <typename... types>
+  using tupleType = typename cpp14::VariadicTypelist<types...>::Result;
 
+  template <typename... types>
+  using tuple = typename ::TL::GenScatterHierarchy<tupleType<types...>, ::TL::ObjectHolder>;
+
+  template <unsigned int i, typename H>
+  auto& Get(H & obj) {
+    return ::TL::Field<i>(obj).value;
+  }
 }
 
 

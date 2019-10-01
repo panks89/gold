@@ -78,4 +78,9 @@ int main()
   cout << "Type at " << 2 << ": " << typeid(TL::TypeAt<tupleTypes, 2>::result).name() << endl;
   cout << "Type at " << 3 << ": " << typeid(TL::TypeAt<tupleTypes, 3>::result).name() << endl;
   cout << "Type at " << 3 << ": " << typeid(TL::TypeAt<tupleTypes, 4>::result).name() << endl;
+
+  ::TL::tuple<int, string, float> widget;
+  TL::Field<1>(widget).value = "This is tuple";
+  cout << TL::Field<1>(widget).value << endl;
+  cout << ::TL::Get<1>(widget) << endl;
 }
