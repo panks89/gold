@@ -79,6 +79,8 @@
 (show-paren-mode)
 (setq frame-title-format "emacs")
 
+(add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+
 ;; set keys for Apple keyboard, for emacs in OS X
 (setq mac-command-modifier 'meta) ; make cmd key do Meta
 (setq mac-option-modifier 'super) ; make opt key do Super
