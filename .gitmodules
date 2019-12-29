@@ -1,0 +1,6 @@
+[submodule "mini-projects"]
+	path = mini-projects
+	url = https://github.com/devilpanks/mini-projects.git
+[submodule "cp"]
+	path = cp
+	url = https://github.com/devilpanks/cp.git
