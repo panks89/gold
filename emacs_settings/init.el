@@ -3,8 +3,12 @@
 ;; Package Management
 (load "package")
 (package-initialize)
+(setq package-check-signature nil)
 (add-to-list 'package-archives
              '("melpa-stable" . "https://stable.melpa.org/packages/") t)
+
+(add-to-list 'package-archives
+	     '("gnu" . "https://elpa.gnu.org/packages/") t)
 
 ;; Define default packages
 (defvar pankaj/packages '(ac-slime
