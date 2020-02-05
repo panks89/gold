@@ -130,6 +130,11 @@
   (set-selection-coding-system 'utf-8))
 (prefer-coding-system 'utf-8)
 
+(setq-default c-basic-offset 4
+	      tab-width 4)
+(setq indent-line-function 'insert-tab)
+(setq-default indent-tabs-mode nil)
+
 ;; yasnippet settings
 (require 'yasnippet)
 (yas-global-mode 1)
