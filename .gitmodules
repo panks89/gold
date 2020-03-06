@@ -4,3 +4,6 @@
 [submodule "cp"]
 	path = cp
 	url = https://github.com/devilpanks/cp.git
+[submodule "emacs_settings/rtags"]
+	path = emacs_settings/rtags
+	url = https://github.com/Andersbakken/rtags.git
