@@ -32,7 +32,6 @@
                           smex
 			  nlinum
 			  monokai-theme
-			  w3
 			  multiple-cursors
                           ubuntu-theme
                           dracula-theme
@@ -91,8 +90,9 @@
 (setq mac-control-modifier 'control) ; make Control key do Control
 (setq ns-function-modifier 'hyper)  ; make Fn key do Hyper
 
-;; monokai theme
-(load-theme 'monokai t)
+;; theme
+;;(load-theme 'monokai t)
+(load-theme 'deeper-blue t)
 
 ;; Smex settings
 (smex-initialize)
