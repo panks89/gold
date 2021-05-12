@@ -8,7 +8,7 @@ namespace local {
     template<typename T>
     class ControlBlockBase
     {
-        std::atomic<size_t> mReferenceCount = 0u;
+        std::atomic<size_t> mReferenceCount {0};
     public:
         virtual ~ControlBlockBase() = default;
         
@@ -21,26 +21,6 @@ namespace local {
         size_t countReferences() { return mReferenceCount; }
         
         std::mutex mMutex;
-    };
-
-    template <typename T>
-    class IntegratedControlBlock : public ControlBlockBase<T> {
-        T mObject;
-    public:
-        
-        template <typename ...U>
-        IntegratedControlBlock(U&& ...args) : mObject{ std::forward<U>(args)... } {
-            ControlBlockBase<T>::addReference();
-        }
-
-        T* get() override { return &mObject;  }
-    };
-
-    struct DefaultDeleter {
-        template <typename T>
-        void operator()(T* ptr) {
-            delete ptr;
-        }
     };
 
     template <typename T, typename Deleter>
@@ -62,7 +42,12 @@ namespace local {
         }
     };
 
-    
+    struct DefaultDeleter {
+        template <typename T>
+        void operator()(T* ptr) {
+            delete ptr;
+        }
+    };
     
     template <typename T, typename Deleter = DefaultDeleter>
     class shared_ptr {
@@ -72,10 +57,7 @@ namespace local {
         
         }
 
-        template <typename ...U>
-        shared_ptr(U&& ...args) : mBlockPointer{ new IntegratedControlBlock<T>(std::forward<U>(args)...) } {
-        
-        }
+        shared_ptr() : mBlockPointer { nullptr } { }
 
         // copy constructor
         shared_ptr(const shared_ptr& sptr) : mBlockPointer{ sptr.mBlockPointer } {
@@ -113,12 +95,20 @@ namespace local {
         }
 
         const size_t use_count() const {
-            return mBlockPointer->countReferences();
+            return mBlockPointer ? mBlockPointer->countReferences() : 0;
+        }
+
+        T* get() const {
+            return mBlockPointer ? mBlockPointer->get() : nullptr;
+        }
+
+        T* operator->() const noexcept {
+            return get();
+        }
+        
+        void reset() {
+            shared_ptr nullSharedPointer;
+            std::swap(mBlockPointer, nullSharedPointer.mBlockPointer);
         }
     };
-
-    template <typename T, typename ...U>
-    shared_ptr<T> make_shared(U&& ...args) {
-        return shared_ptr{ std::forward<U>(args)... };
-    }
 }
