@@ -14,6 +14,33 @@
 (setq mac-control-modifier 'control) ; make Control key do Control
 (setq ns-function-modifier 'hyper)   ; make Fn key do Hyper
 
+;; show paren mode
+(show-paren-mode)
+
+;; mark cpp-mode for header files
+(add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+
+;; encoding settings
+(setq utf-translate-cjk-mode nil)
+
+;; disable CJK coding/encoding (Chinese/Japanese/Korean characters)
+(set-language-environment 'utf-8)
+(set-keyboard-coding-system 'utf-8-mac)
+
+;; For old Carbon emacs on OS X only
+(setq locale-coding-system 'utf-8)
+(set-default-coding-systems 'utf-8)
+(set-terminal-coding-system 'utf-8)
+(unless (eq system-type 'windows-nt)
+  (set-selection-coding-system 'utf-8))
+(prefer-coding-system 'utf-8)
+
+;; formtting
+(setq-default c-basic-offset 4
+	  tab-width 4)
+(setq indent-line-function 'insert-tab)
+(setq-default indent-tabs-mode nil)
+
 ;; Initialize package sources
 (require 'package)
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
@@ -55,6 +82,10 @@
 
 ;; highlight current line
 (global-hl-line-mode)
+
+;; electric pair mode
+(electric-pair-mode)
+
 (setq frame-title-format "emacs")
 
 ;; Set up the visible bell
@@ -100,6 +131,7 @@
     "t"  '(:ignore t :which-key "toggles")
     "tt" '(counsel-load-theme :which-key "choose theme")
     "." '(set-mark-command :which-key "set mark here")
+    "u" '(pop-to-mark-command :which-key "Pop off mark ring into the buffer's actual mark")
     "fde" '(lambda () (interactive) (find-file (expand-file-name "~/.emacs.d/Emacs.org")))))
 
 (use-package evil
@@ -143,6 +175,10 @@
 
 ;; Windmove default keybindings
 (windmove-default-keybindings)
+
+(use-package switch-window
+  :bind
+  ("C-x o" . switch-window))
 
 (use-package command-log-mode
   :commands command-log-mode)
@@ -355,6 +391,13 @@
   :ensure t
   :config (treemacs-set-scope-type 'Perspectives))
 
+(use-package multiple-cursors
+  :bind
+  ("C-S-c C-S-c" . mc/edit-lines)
+  ("C->" . mc/mark-next-like-this)
+  ("C-<" . mc/mark-previous-like-this)
+  ("C-c C-<" . mc/mark-all-like-this))
+
 (defun conf/lsp-mode-setup ()
   (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
   (lsp-headerline-breadcrumb-mode))
@@ -373,11 +416,11 @@
   :config
   (lsp-enable-which-key-integration t)
   (setq gc-cons-threshold (* 100 1024 1024)
-      read-process-output-max (* 1024 1024)
-      treemacs-space-between-root-nodes nil
-      company-idle-delay 0.0
-      company-minimum-prefix-length 1
-      lsp-idle-delay 0.1)  ;; clangd is fast
+  read-process-output-max (* 1024 1024)
+  treemacs-space-between-root-nodes nil
+  company-idle-delay 0.0
+  company-minimum-prefix-length 1
+  lsp-idle-delay 0.1)  ;; clangd is fast
   )
 
 (use-package lsp-ui
@@ -410,8 +453,16 @@
     "d" '(dap-hydra t :wk "debugger"))
   ;; c++ debugging
   (require 'dap-cpptools))
-(use-package yasnippet)
-(yas-global-mode)
+
+(use-package yasnippet
+  :ensure t
+  :config
+  (use-package yasnippet-snippets
+    :ensure t)
+  (yas-global-mode t)
+  (define-key yas-minor-mode-map (kbd "<tab>") nil)
+  (define-key yas-minor-mode-map (kbd "TAB") nil)
+  (define-key yas-minor-mode-map (kbd "C-'") #'yas-expand))
 
 (use-package python-mode
   :ensure t
@@ -433,7 +484,7 @@
   :after lsp-mode
   :hook (lsp-mode . company-mode)
   :bind (:map company-active-map
-	      ("<tab>" . company-complete-selection))
+	  ("<tab>" . company-complete-selection))
   (:map lsp-mode-map
 	("<tab>" . company-indent-or-complete-common))
   :custom

@@ -23,6 +23,33 @@
   (setq mac-option-modifier 'super)    ; make opt key do Super
   (setq mac-control-modifier 'control) ; make Control key do Control
   (setq ns-function-modifier 'hyper)   ; make Fn key do Hyper
+
+  ;; show paren mode
+  (show-paren-mode)
+
+  ;; mark cpp-mode for header files
+  (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+
+  ;; encoding settings
+  (setq utf-translate-cjk-mode nil)
+
+  ;; disable CJK coding/encoding (Chinese/Japanese/Korean characters)
+  (set-language-environment 'utf-8)
+  (set-keyboard-coding-system 'utf-8-mac)
+
+  ;; For old Carbon emacs on OS X only
+  (setq locale-coding-system 'utf-8)
+  (set-default-coding-systems 'utf-8)
+  (set-terminal-coding-system 'utf-8)
+  (unless (eq system-type 'windows-nt)
+    (set-selection-coding-system 'utf-8))
+  (prefer-coding-system 'utf-8)
+
+  ;; formtting
+  (setq-default c-basic-offset 4
+		tab-width 4)
+  (setq indent-line-function 'insert-tab)
+  (setq-default indent-tabs-mode nil)
 #+end_src
 
 * Package Management System
@@ -91,6 +118,10 @@
 
   ;; highlight current line
   (global-hl-line-mode)
+
+  ;; electric pair mode
+  (electric-pair-mode)
+
   (setq frame-title-format "emacs")
 
   ;; Set up the visible bell
@@ -158,6 +189,7 @@
       "t"  '(:ignore t :which-key "toggles")
       "tt" '(counsel-load-theme :which-key "choose theme")
       "." '(set-mark-command :which-key "set mark here")
+      "u" '(pop-to-mark-command :which-key "Pop off mark ring into the buffer's actual mark")
       "fde" '(lambda () (interactive) (find-file (expand-file-name "~/.emacs.d/Emacs.org")))))
 
   (use-package evil
@@ -233,6 +265,16 @@
   ;; Windmove default keybindings
   (windmove-default-keybindings)
 #+end_src   
+
+** [[https://github.com/dimitri/switch-window][switch-window]] Package
+
+   Window numbers for Emacs: Navigate your windows and frames using numbers!
+
+#+begin_src emacs-lisp
+  (use-package switch-window
+    :bind
+    ("C-x o" . switch-window))
+#+end_src
 
 * Packages
 
@@ -535,6 +577,34 @@
     :config (treemacs-set-scope-type 'Perspectives))
 #+end_src
 
+** Multiple cursors
+
+   [[https://github.com/magnars/multiple-cursors.el][Multiple cursors]] for the Emacs!
+
+#+begin_src emacs-lisp
+  (use-package multiple-cursors
+    :bind
+    ("C-S-c C-S-c" . mc/edit-lines)
+    ("C->" . mc/mark-next-like-this)
+    ("C-<" . mc/mark-previous-like-this)
+    ("C-c C-<" . mc/mark-all-like-this))
+#+end_src
+
+** Old settings turned off!
+   Old settings for reference.
+#+begin_src emacs-lisp :tangle no
+  ;; ido settings
+  (ido-mode t)
+  (setq ido-enable-flex-matching t
+	ido-use-virtual-buffers t)
+  ;; Smex settings
+  (smex-initialize)
+  (global-set-key (kbd "M-x") 'smex)
+  (global-set-key (kbd "M-X") 'smex-major-mode-commands)
+  ;; This is your old M-x
+  (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
+#+end_src
+
 * Development
 ** Languages
 
@@ -663,8 +733,16 @@
       "d" '(dap-hydra t :wk "debugger"))
     ;; c++ debugging
     (require 'dap-cpptools))
-  (use-package yasnippet)
-  (yas-global-mode)
+
+  (use-package yasnippet
+    :ensure t
+    :config
+    (use-package yasnippet-snippets
+      :ensure t)
+    (yas-global-mode t)
+    (define-key yas-minor-mode-map (kbd "<tab>") nil)
+    (define-key yas-minor-mode-map (kbd "TAB") nil)
+    (define-key yas-minor-mode-map (kbd "C-'") #'yas-expand))
 #+end_src
 
 *** Python
