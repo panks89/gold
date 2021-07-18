@@ -361,11 +361,24 @@
 
 (use-package lsp-mode
   :commands (lsp lsp-deferred)
-  :hook (lsp-mode . conf/lsp-mode-setup)
+  :hook
+  (lsp-mode . conf/lsp-mode-setup)
+  (c++-mode . lsp-deferred)
+  (c-mode . lsp-deferred)
   :init
+  (setq lsp-clients-clangd-args '("-j=4" "-background-index" "-log=verbose"))
+  (setq lsp-clangd-binary-path "/usr/bin/clangd-12")
+  ;;(setq lsp-clients-clangd-executable "/usr/bin/clangd-12")
   (setq lsp-keymap-prefix "C-c l")  ;; Or 'C-l', 's-l'
   :config
-  (lsp-enable-which-key-integration t))
+  (lsp-enable-which-key-integration t)
+  (setq gc-cons-threshold (* 100 1024 1024)
+      read-process-output-max (* 1024 1024)
+      treemacs-space-between-root-nodes nil
+      company-idle-delay 0.0
+      company-minimum-prefix-length 1
+      lsp-idle-delay 0.1)  ;; clangd is fast
+  )
 
 (use-package lsp-ui
   :hook (lsp-mode . lsp-ui-mode)
@@ -394,7 +407,11 @@
   (general-define-key
     :keymaps 'lsp-mode-map
     :prefix lsp-keymap-prefix
-    "d" '(dap-hydra t :wk "debugger")))
+    "d" '(dap-hydra t :wk "debugger"))
+  ;; c++ debugging
+  (require 'dap-cpptools))
+(use-package yasnippet)
+(yas-global-mode)
 
 (use-package python-mode
   :ensure t
@@ -416,15 +433,16 @@
   :after lsp-mode
   :hook (lsp-mode . company-mode)
   :bind (:map company-active-map
-         ("<tab>" . company-complete-selection))
-        (:map lsp-mode-map
-         ("<tab>" . company-indent-or-complete-common))
+	      ("<tab>" . company-complete-selection))
+  (:map lsp-mode-map
+	("<tab>" . company-indent-or-complete-common))
   :custom
   (company-minimum-prefix-length 1)
   (company-idle-delay 0.0))
 
 (use-package company-box
   :hook (company-mode . company-box-mode))
+(add-hook 'after-init-hook 'global-company-mode)
 
 (use-package projectile
   :diminish projectile-mode
@@ -541,6 +559,3 @@
   :config
   (evil-collection-define-key 'normal 'dired-mode-map
     "H" 'dired-hide-dotfiles-mode))
-
-;; Make gc pauses faster by decreasing the threshold.
-(setq gc-cons-threshold (* 2 1000 1000))

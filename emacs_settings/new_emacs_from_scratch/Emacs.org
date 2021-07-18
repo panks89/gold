@@ -555,6 +555,8 @@
      able to learn a lot just by pressing =C-c l= in a =lsp-mode= buffer and trying different things
      that you find there.
 
+     [[https://emacs-lsp.github.io/lsp-mode/tutorials/CPP-guide/#debugging][lsp-mode debugging]]
+
 #+begin_src emacs-lisp
   (defun conf/lsp-mode-setup ()
     (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
@@ -562,11 +564,24 @@
 
   (use-package lsp-mode
     :commands (lsp lsp-deferred)
-    :hook (lsp-mode . conf/lsp-mode-setup)
+    :hook
+    (lsp-mode . conf/lsp-mode-setup)
+    (c++-mode . lsp-deferred)
+    (c-mode . lsp-deferred)
     :init
+    (setq lsp-clients-clangd-args '("-j=4" "-background-index" "-log=verbose"))
+    (setq lsp-clangd-binary-path "/usr/bin/clangd-12")
+    ;;(setq lsp-clients-clangd-executable "/usr/bin/clangd-12")
     (setq lsp-keymap-prefix "C-c l")  ;; Or 'C-l', 's-l'
     :config
-    (lsp-enable-which-key-integration t))
+    (lsp-enable-which-key-integration t)
+    (setq gc-cons-threshold (* 100 1024 1024)
+	read-process-output-max (* 1024 1024)
+	treemacs-space-between-root-nodes nil
+	company-idle-delay 0.0
+	company-minimum-prefix-length 1
+	lsp-idle-delay 0.1)  ;; clangd is fast
+    )
 #+end_src
 
 **** lsp-ui
@@ -645,7 +660,11 @@
     (general-define-key
       :keymaps 'lsp-mode-map
       :prefix lsp-keymap-prefix
-      "d" '(dap-hydra t :wk "debugger")))
+      "d" '(dap-hydra t :wk "debugger"))
+    ;; c++ debugging
+    (require 'dap-cpptools))
+  (use-package yasnippet)
+  (yas-global-mode)
 #+end_src
 
 *** Python
@@ -689,6 +708,23 @@ pip install --user "python-language-server[all]"
 
 *** C++
 
+    [[https://github.com/joaotavora/eglot][Eglot]]: Emacs Polyglot is an Emacs LSP client. We will keep it inactive for now.  
+
+#+begin_src shell :tangle no
+  sudo apt-get update
+  sudo apt-get install clangd-12
+  # configure dap cpp tools in Emacs
+  # M-x dap-cpptools-setup
+#+end_src
+
+#+begin_src emacs-lisp :tangle no
+  (use-package eglot
+    :ensure t
+    :config
+    (add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd-12"))
+    (add-hook 'c-mode-hook 'eglot-ensure)
+    (add-hook 'c++-mode-hook 'eglot-ensure))
+#+end_src
     
 ** Company Mode
 
@@ -705,15 +741,16 @@ pip install --user "python-language-server[all]"
     :after lsp-mode
     :hook (lsp-mode . company-mode)
     :bind (:map company-active-map
-           ("<tab>" . company-complete-selection))
-          (:map lsp-mode-map
-           ("<tab>" . company-indent-or-complete-common))
+		("<tab>" . company-complete-selection))
+    (:map lsp-mode-map
+	  ("<tab>" . company-indent-or-complete-common))
     :custom
     (company-minimum-prefix-length 1)
     (company-idle-delay 0.0))
 
   (use-package company-box
     :hook (company-mode . company-box-mode))
+  (add-hook 'after-init-hook 'global-company-mode)
 #+end_src
 
 ** Projectile
@@ -1056,7 +1093,7 @@ pip install --user "python-language-server[all]"
   Dial the GC threshold back down so that garbage collection happens more frequently
   but in less time.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   ;; Make gc pauses faster by decreasing the threshold.
   (setq gc-cons-threshold (* 2 1000 1000))
 #+end_src
