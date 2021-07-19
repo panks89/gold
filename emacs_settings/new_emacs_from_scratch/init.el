@@ -36,8 +36,9 @@
 (prefer-coding-system 'utf-8)
 
 ;; formtting
-(setq-default c-basic-offset 4
-	  tab-width 4)
+(setq-default c-default-style "linux"
+              c-basic-offset 2
+              tab-width 2)
 (setq indent-line-function 'insert-tab)
 (setq-default indent-tabs-mode nil)
 
@@ -398,6 +399,10 @@
   ("C-<" . mc/mark-previous-like-this)
   ("C-c C-<" . mc/mark-all-like-this))
 
+(use-package clang-format+
+  :config
+  (add-hook 'c-mode-common-hook #'clang-format+-mode))
+
 (defun conf/lsp-mode-setup ()
   (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
   (lsp-headerline-breadcrumb-mode))
@@ -416,11 +421,11 @@
   :config
   (lsp-enable-which-key-integration t)
   (setq gc-cons-threshold (* 100 1024 1024)
-  read-process-output-max (* 1024 1024)
-  treemacs-space-between-root-nodes nil
-  company-idle-delay 0.0
-  company-minimum-prefix-length 1
-  lsp-idle-delay 0.1)  ;; clangd is fast
+read-process-output-max (* 1024 1024)
+treemacs-space-between-root-nodes nil
+company-idle-delay 0.0
+company-minimum-prefix-length 1
+lsp-idle-delay 0.1)  ;; clangd is fast
   )
 
 (use-package lsp-ui
@@ -484,7 +489,7 @@
   :after lsp-mode
   :hook (lsp-mode . company-mode)
   :bind (:map company-active-map
-	  ("<tab>" . company-complete-selection))
+	("<tab>" . company-complete-selection))
   (:map lsp-mode-map
 	("<tab>" . company-indent-or-complete-common))
   :custom

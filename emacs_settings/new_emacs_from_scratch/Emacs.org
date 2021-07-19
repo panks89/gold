@@ -46,8 +46,9 @@
   (prefer-coding-system 'utf-8)
 
   ;; formtting
-  (setq-default c-basic-offset 4
-		tab-width 4)
+  (setq-default c-default-style "linux"
+                c-basic-offset 2
+                tab-width 2)
   (setq indent-line-function 'insert-tab)
   (setq-default indent-tabs-mode nil)
 #+end_src
@@ -588,6 +589,17 @@
     ("C->" . mc/mark-next-like-this)
     ("C-<" . mc/mark-previous-like-this)
     ("C-c C-<" . mc/mark-all-like-this))
+#+end_src
+
+** Clang format
+   This package allows to filter code through clang-format to fix its formatting.
+   clang-format is a tool that formats C/C++/Obj-C code according to a set of
+   style options, see <http://clang.llvm.org/docs/ClangFormatStyleOptions.html>.
+
+#+begin_src emacs-lisp
+  (use-package clang-format+
+    :config
+    (add-hook 'c-mode-common-hook #'clang-format+-mode))
 #+end_src
 
 ** Old settings turned off!
