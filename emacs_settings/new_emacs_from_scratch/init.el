@@ -577,7 +577,7 @@ lsp-idle-delay 0.1)  ;; clangd is fast
   :after eshell)
 
 (use-package eshell
-  :hook (eshell-first-time-mode . efs/configure-eshell)
+  :hook (eshell-first-time-mode . conf/configure-eshell)
   :config
 
   (with-eval-after-load 'esh-opt

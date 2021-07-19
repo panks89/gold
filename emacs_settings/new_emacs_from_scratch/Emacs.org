@@ -1069,7 +1069,7 @@ pip install --user "python-language-server[all]"
     :after eshell)
 
   (use-package eshell
-    :hook (eshell-first-time-mode . efs/configure-eshell)
+    :hook (eshell-first-time-mode . conf/configure-eshell)
     :config
 
     (with-eval-after-load 'esh-opt
