@@ -243,6 +243,18 @@
   ([remap describe-variable] . counsel-describe-variable)
   ([remap describe-key] . helpful-key))
 
+(use-package hydra
+  :defer t)
+
+(defhydra hydra-text-scale (:timeout 4)
+  "scale text"
+  ("j" text-scale-increase "in")
+  ("k" text-scale-decrease "out")
+  ("f" nil "finished" :exit t))
+
+(general-define-key
+  "C-c ts" '(hydra-text-scale/body :which-key "scale text"))
+
 (use-package treemacs
   :ensure t
   :defer t

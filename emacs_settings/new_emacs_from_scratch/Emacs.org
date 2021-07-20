@@ -475,7 +475,7 @@
    =j= and =k= increase and decrease the text scale.
    You can press any other key (or =f= specifically) to exit the transient key map.
 
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp
   (use-package hydra
     :defer t)
 
@@ -485,8 +485,8 @@
     ("k" text-scale-decrease "out")
     ("f" nil "finished" :exit t))
 
-  (conf/leader-keys
-    "ts" '(hydra-text-scale/body :which-key "scale text"))
+  (general-define-key
+    "C-c ts" '(hydra-text-scale/body :which-key "scale text"))
 #+end_src
 
    This setting is available with evil mode. Use *text-scale-increase* and *text-scale-decrease*
