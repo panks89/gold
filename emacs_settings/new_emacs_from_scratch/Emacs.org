@@ -688,7 +688,7 @@
     (c-mode . lsp-deferred)
     :init
     (setq lsp-clients-clangd-args '("-j=4" "-background-index" "-log=verbose"))
-    (setq lsp-clangd-binary-path "/usr/bin/clangd-12")
+    (setq lsp-clangd-binary-path "/usr/bin/clangd")
     ;;(setq lsp-clients-clangd-executable "/usr/bin/clangd-12")
     (setq lsp-keymap-prefix "C-c l")  ;; Or 'C-l', 's-l'
     :config
@@ -869,6 +869,8 @@ pip install --user "python-language-server[all]"
   (use-package company
     :after lsp-mode
     :hook (lsp-mode . company-mode)
+    :init
+    (setq company-clang-executable "/usr/bin/clang")
     :bind (:map company-active-map
                 ("<tab>" . company-complete-selection))
     (:map lsp-mode-map
