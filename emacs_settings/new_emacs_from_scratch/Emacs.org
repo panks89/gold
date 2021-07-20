@@ -53,6 +53,18 @@
   (setq-default indent-tabs-mode nil)
 #+end_src
 
+  Different styles:-
+
+  - “k&r”: What Kernighan and Ritchie, the authors of C used in their book
+  - “bsd”: What BSD developers use, aka “Allman style” after Eric Allman.
+  - “whitesmith”: Popularized by the examples that came with Whitesmiths C, an early commercial C compiler.
+  - “stroustrup”: What Stroustrup, the author of C++ used in his book
+  - “ellemtel”: Popular C++ coding standards as defined by “Programming in C++, Rules and Recommendations,” Erik Nyquist and Mats Henricson, Ellemtel
+  - “linux”: What the Linux developers use for kernel development
+  - “python”: What Python developers use for extension modules
+  - “java”: The default style for java-mode (see below)
+  - “user”: When you want to define your own style
+
 * Package Management System
   
   Emacs has a built in package manager but it doesn’t make it easy to automatically install
@@ -167,7 +179,7 @@
   (set-face-attribute 'variable-pitch nil :font "Cantarell" :height conf/default-variable-font-size :weight 'regular)
 #+end_src   
 
-** Evil mode and key bindings
+** Evil mode and key bindings [Disabled]
    
    This configuration uses [[https://evil.readthedocs.io/en/latest/index.html][evil-mode]] for a Vi-like modal editing experience.
    [[https://github.com/noctuid/general.el][general.el]] is used for easy keybinding configuration that integrates well with which-key.
@@ -175,6 +187,12 @@
    keybindings for evil-mode.
 
 #+begin_src emacs-lisp
+  ;; general.el package
+  (use-package general)
+#+end_src
+
+
+#+begin_src emacs-lisp :tangle no
   ;; Make ESC quit prompts
   (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
@@ -199,6 +217,7 @@
     (setq evil-want-keybinding nil)
     (setq evil-want-C-u-scroll t)
     (setq evil-want-C-i-jump nil)
+    (setq evil-default-state 'emacs)
     :config
     (evil-mode 1)
     (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
@@ -456,7 +475,7 @@
    =j= and =k= increase and decrease the text scale.
    You can press any other key (or =f= specifically) to exit the transient key map.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (use-package hydra
     :defer t)
 
@@ -469,6 +488,10 @@
   (conf/leader-keys
     "ts" '(hydra-text-scale/body :which-key "scale text"))
 #+end_src
+
+   This setting is available with evil mode. Use *text-scale-increase* and *text-scale-decrease*
+   functions to control text sizes. Evil mode is disabled because we want C-SPC binding back. This
+   is useful to navigate through mark ring in emacs mode.
 
 ** Treemacs
 
@@ -599,7 +622,20 @@
 #+begin_src emacs-lisp
   (use-package clang-format+
     :config
+    (setq clang-format-style "file")
+    (setq clang-format-fallback-style "llvm")
+    (setq clang-format-executable "/usr/local/pkg/bin/clang-format")
     (add-hook 'c-mode-common-hook #'clang-format+-mode))
+  (add-hook 'c-common-mode-hook
+    (lambda ()
+      (add-hook (make-local-variable 'before-save-hook)
+                'clang-format-buffer)))
+#+end_src
+
+** Groovy mode
+
+#+begin_src emacs-lisp
+  (use-package groovy-mode)
 #+end_src
 
 ** Old settings turned off!
@@ -677,6 +713,9 @@
     :hook (lsp-mode . lsp-ui-mode)
     :custom
     (lsp-ui-doc-position 'bottom))
+  ;; disable it in default settings
+  (setq lsp-ui-mode nil)
+  (setq lsp-ui-doc-enable nil)
 #+end_src
 
 **** lsp-treemacs
@@ -831,9 +870,9 @@ pip install --user "python-language-server[all]"
     :after lsp-mode
     :hook (lsp-mode . company-mode)
     :bind (:map company-active-map
-		("<tab>" . company-complete-selection))
+                ("<tab>" . company-complete-selection))
     (:map lsp-mode-map
-	  ("<tab>" . company-indent-or-complete-common))
+          ("<tab>" . company-indent-or-complete-common))
     :custom
     (company-minimum-prefix-length 1)
     (company-idle-delay 0.0))
@@ -841,6 +880,12 @@ pip install --user "python-language-server[all]"
   (use-package company-box
     :hook (company-mode . company-box-mode))
   (add-hook 'after-init-hook 'global-company-mode)
+
+  ;; Disable company mode for some modes
+    (dolist (mode '(term-mode-hook
+                    shell-mode-hook
+                    eshell-mode-hook))
+      (add-hook mode (lambda () (company-mode 0))))
 #+end_src
 
 ** Projectile
@@ -1151,11 +1196,10 @@ pip install --user "python-language-server[all]"
     :ensure nil
     :commands (dired dired-jump)
     :bind (("C-x C-j" . dired-jump))
-    :custom ((dired-listing-switches "-agho --group-directories-first"))
-    :config
-    (evil-collection-define-key 'normal 'dired-mode-map
-      "h" 'dired-single-up-directory
-      "l" 'dired-single-buffer))
+    (:map dired-mode-map
+          ("l" . dired-single-buffer)
+          ("h" . dired-single-up-directory))
+    :custom ((dired-listing-switches "-agho --group-directories-first")))
 
   (use-package dired-single
     :commands (dired dired-jump))
@@ -1173,9 +1217,8 @@ pip install --user "python-language-server[all]"
 
   (use-package dired-hide-dotfiles
     :hook (dired-mode . dired-hide-dotfiles-mode)
-    :config
-    (evil-collection-define-key 'normal 'dired-mode-map
-      "H" 'dired-hide-dotfiles-mode))
+    :bind (:map dired-mode-map
+                ("H" . dired-hide-dotfiles-mode)))
 #+end_src
 
 * Runtime Performance

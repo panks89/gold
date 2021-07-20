@@ -117,46 +117,8 @@
 ;; Set the variable pitch face
 (set-face-attribute 'variable-pitch nil :font "Cantarell" :height conf/default-variable-font-size :weight 'regular)
 
-;; Make ESC quit prompts
-(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
-
-(use-package general
-  :after evil
-  :config
-  (general-create-definer conf/leader-keys
-    :keymaps '(normal insert visual emacs)
-    :prefix "SPC"
-    :global-prefix "C-SPC")
-
-  (conf/leader-keys
-    "t"  '(:ignore t :which-key "toggles")
-    "tt" '(counsel-load-theme :which-key "choose theme")
-    "." '(set-mark-command :which-key "set mark here")
-    "u" '(pop-to-mark-command :which-key "Pop off mark ring into the buffer's actual mark")
-    "fde" '(lambda () (interactive) (find-file (expand-file-name "~/.emacs.d/Emacs.org")))))
-
-(use-package evil
-  :init
-  (setq evil-want-integration t)
-  (setq evil-want-keybinding nil)
-  (setq evil-want-C-u-scroll t)
-  (setq evil-want-C-i-jump nil)
-  :config
-  (evil-mode 1)
-  (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
-  (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
-
-  ;; Use visual line motions even outside of visual-line-mode buffers
-  (evil-global-set-key 'motion "j" 'evil-next-visual-line)
-  (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
-
-  (evil-set-initial-state 'messages-buffer-mode 'normal)
-  (evil-set-initial-state 'dashboard-mode 'normal))
-
-(use-package evil-collection
-  :after evil
-  :config
-  (evil-collection-init))
+;; general.el package
+(use-package general)
 
 ;; NOTE: If you want to move everything out of the ~/.emacs.d folder
 ;; reliably, set `user-emacs-directory` before loading no-littering!
@@ -281,18 +243,6 @@
   ([remap describe-variable] . counsel-describe-variable)
   ([remap describe-key] . helpful-key))
 
-(use-package hydra
-  :defer t)
-
-(defhydra hydra-text-scale (:timeout 4)
-  "scale text"
-  ("j" text-scale-increase "in")
-  ("k" text-scale-decrease "out")
-  ("f" nil "finished" :exit t))
-
-(conf/leader-keys
-  "ts" '(hydra-text-scale/body :which-key "scale text"))
-
 (use-package treemacs
   :ensure t
   :defer t
@@ -401,7 +351,16 @@
 
 (use-package clang-format+
   :config
+  (setq clang-format-style "file")
+  (setq clang-format-fallback-style "llvm")
+  (setq clang-format-executable "/usr/local/pkg/bin/clang-format")
   (add-hook 'c-mode-common-hook #'clang-format+-mode))
+(add-hook 'c-common-mode-hook
+  (lambda ()
+    (add-hook (make-local-variable 'before-save-hook)
+              'clang-format-buffer)))
+
+(use-package groovy-mode)
 
 (defun conf/lsp-mode-setup ()
   (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
@@ -432,6 +391,9 @@ lsp-idle-delay 0.1)  ;; clangd is fast
   :hook (lsp-mode . lsp-ui-mode)
   :custom
   (lsp-ui-doc-position 'bottom))
+;; disable it in default settings
+(setq lsp-ui-mode nil)
+(setq lsp-ui-doc-enable nil)
 
 (use-package lsp-treemacs
   :after lsp)
@@ -489,9 +451,9 @@ lsp-idle-delay 0.1)  ;; clangd is fast
   :after lsp-mode
   :hook (lsp-mode . company-mode)
   :bind (:map company-active-map
-	("<tab>" . company-complete-selection))
+              ("<tab>" . company-complete-selection))
   (:map lsp-mode-map
-	("<tab>" . company-indent-or-complete-common))
+        ("<tab>" . company-indent-or-complete-common))
   :custom
   (company-minimum-prefix-length 1)
   (company-idle-delay 0.0))
@@ -499,6 +461,12 @@ lsp-idle-delay 0.1)  ;; clangd is fast
 (use-package company-box
   :hook (company-mode . company-box-mode))
 (add-hook 'after-init-hook 'global-company-mode)
+
+;; Disable company mode for some modes
+  (dolist (mode '(term-mode-hook
+                  shell-mode-hook
+                  eshell-mode-hook))
+    (add-hook mode (lambda () (company-mode 0))))
 
 (use-package projectile
   :diminish projectile-mode
@@ -590,11 +558,10 @@ lsp-idle-delay 0.1)  ;; clangd is fast
   :ensure nil
   :commands (dired dired-jump)
   :bind (("C-x C-j" . dired-jump))
-  :custom ((dired-listing-switches "-agho --group-directories-first"))
-  :config
-  (evil-collection-define-key 'normal 'dired-mode-map
-    "h" 'dired-single-up-directory
-    "l" 'dired-single-buffer))
+  (:map dired-mode-map
+        ("l" . dired-single-buffer)
+        ("h" . dired-single-up-directory))
+  :custom ((dired-listing-switches "-agho --group-directories-first")))
 
 (use-package dired-single
   :commands (dired dired-jump))
@@ -612,6 +579,5 @@ lsp-idle-delay 0.1)  ;; clangd is fast
 
 (use-package dired-hide-dotfiles
   :hook (dired-mode . dired-hide-dotfiles-mode)
-  :config
-  (evil-collection-define-key 'normal 'dired-mode-map
-    "H" 'dired-hide-dotfiles-mode))
+  :bind (:map dired-mode-map
+              ("H" . dired-hide-dotfiles-mode)))
