@@ -431,7 +431,8 @@ lsp-idle-delay 0.1)  ;; clangd is fast
     :prefix lsp-keymap-prefix
     "d" '(dap-hydra t :wk "debugger"))
   ;; c++ debugging
-  (require 'dap-cpptools))
+  (require 'dap-cpptools)
+  (dap-cpptools-setup))
 
 (use-package yasnippet
   :ensure t

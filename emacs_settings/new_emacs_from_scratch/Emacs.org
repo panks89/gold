@@ -783,7 +783,8 @@
       :prefix lsp-keymap-prefix
       "d" '(dap-hydra t :wk "debugger"))
     ;; c++ debugging
-    (require 'dap-cpptools))
+    (require 'dap-cpptools)
+    (dap-cpptools-setup))
 
   (use-package yasnippet
     :ensure t
