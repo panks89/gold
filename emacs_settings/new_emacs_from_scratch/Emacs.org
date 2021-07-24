@@ -632,10 +632,12 @@
                 'clang-format-buffer)))
 #+end_src
 
-** Groovy mode
+** Other packages to support various modes
 
 #+begin_src emacs-lisp
   (use-package groovy-mode)
+  (use-package cmake-mode)
+  (use-package dockerfile-mode)
 #+end_src
 
 ** Old settings turned off!
@@ -1231,4 +1233,15 @@ pip install --user "python-language-server[all]"
 #+begin_src emacs-lisp :tangle no
   ;; Make gc pauses faster by decreasing the threshold.
   (setq gc-cons-threshold (* 2 1000 1000))
+#+end_src
+
+* Set Clang alternatives
+
+#+begin_src shell :tangle no
+  sudo apt-get update
+  sudo apt-get install clang-10 clang-12 clangd-12
+  sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-10 1
+  sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-12 2
+  sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clang-12 1
+
 #+end_src

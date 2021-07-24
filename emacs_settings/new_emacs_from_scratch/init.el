@@ -373,6 +373,8 @@
               'clang-format-buffer)))
 
 (use-package groovy-mode)
+(use-package cmake-mode)
+(use-package dockerfile-mode)
 
 (defun conf/lsp-mode-setup ()
   (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
