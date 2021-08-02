@@ -376,6 +376,19 @@
 (use-package cmake-mode)
 (use-package dockerfile-mode)
 
+; turn on the tab-bar-mode
+(tab-bar-mode t)
+(global-set-key [M-left] 'tab-bar-switch-to-prev-tab)
+(global-set-key [M-right] 'tab-bar-switch-to-next-tab)
+
+;;(setq-default explicit-shell-file-name "/bin/bash")
+;;(setq-default shell-file-name "/bin/bash")
+(use-package ansi-color)
+(defun conf/ansi-colorize-buffer ()
+  (let ((buffer-read-only nil))
+    (ansi-color-apply-on-region (point-min) (point-max))))
+(add-hook 'compilation-filter-hook 'conf/ansi-colorize-buffer)
+
 (defun conf/lsp-mode-setup ()
   (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
   (lsp-headerline-breadcrumb-mode))

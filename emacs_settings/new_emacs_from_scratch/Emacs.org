@@ -655,6 +655,34 @@
   (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 #+end_src
 
+* Tab-bar settings
+
+#+begin_src emacs-lisp
+  ; turn on the tab-bar-mode
+  (tab-bar-mode t)
+  (global-set-key [M-left] 'tab-bar-switch-to-prev-tab)
+  (global-set-key [M-right] 'tab-bar-switch-to-next-tab)
+#+end_src
+
+* Compile buffer fix
+
+  There are escape sequences in *compilation* buffer which the terminal should interpret
+  correctly.
+
+#+begin_src shell :tangle no
+  export ESHELL=/bin/bash
+#+end_src
+
+#+begin_src emacs-lisp
+  ;;(setq-default explicit-shell-file-name "/bin/bash")
+  ;;(setq-default shell-file-name "/bin/bash")
+  (use-package ansi-color)
+  (defun conf/ansi-colorize-buffer ()
+    (let ((buffer-read-only nil))
+      (ansi-color-apply-on-region (point-min) (point-max))))
+  (add-hook 'compilation-filter-hook 'conf/ansi-colorize-buffer)
+#+end_src
+
 * Development
 ** Languages
 
@@ -1243,5 +1271,4 @@ pip install --user "python-language-server[all]"
   sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-10 1
   sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-12 2
   sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clang-12 1
-
 #+end_src
