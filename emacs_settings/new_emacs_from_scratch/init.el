@@ -378,6 +378,10 @@
 
 ; turn on the tab-bar-mode
 (tab-bar-mode t)
+(setq tab-bar-close-button-show nil
+  tab-bar-new-button-show nil
+  tab-bar-new-tab-choice "*scratch*")
+
 (global-set-key [M-left] 'tab-bar-switch-to-prev-tab)
 (global-set-key [M-right] 'tab-bar-switch-to-next-tab)
 
@@ -390,7 +394,8 @@
 (add-hook 'compilation-filter-hook 'conf/ansi-colorize-buffer)
 
 (defun conf/lsp-mode-setup ()
-  (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
+  ;;(setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
+  (setq lsp-headerline-breadcrumb-segments '(file symbols))
   (lsp-headerline-breadcrumb-mode))
 
 (use-package lsp-mode
@@ -407,11 +412,11 @@
   :config
   (lsp-enable-which-key-integration t)
   (setq gc-cons-threshold (* 100 1024 1024)
-read-process-output-max (* 1024 1024)
-treemacs-space-between-root-nodes nil
-company-idle-delay 0.0
-company-minimum-prefix-length 1
-lsp-idle-delay 0.1)  ;; clangd is fast
+        read-process-output-max (* 1024 1024)
+        treemacs-space-between-root-nodes nil
+        company-idle-delay 0.0
+        company-minimum-prefix-length 1
+        lsp-idle-delay 0.1)  ;; clangd is fast
   )
 
 (use-package lsp-ui
