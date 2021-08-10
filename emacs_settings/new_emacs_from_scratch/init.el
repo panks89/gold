@@ -42,6 +42,9 @@
 (setq indent-line-function 'insert-tab)
 (setq-default indent-tabs-mode nil)
 
+;; emacs as server
+(server-start)
+
 ;; Initialize package sources
 (require 'package)
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
@@ -375,15 +378,31 @@
 (use-package groovy-mode)
 (use-package cmake-mode)
 (use-package dockerfile-mode)
+(add-hook 'prog-mode-hook #'hs-minor-mode)
+(global-set-key (kbd "C-+") 'hs-toggle-hiding)
 
-; turn on the tab-bar-mode
-(tab-bar-mode t)
+;; turn on the tab-bar-mode
+;(tab-bar-mode t)
 (setq tab-bar-close-button-show nil
-  tab-bar-new-button-show nil
-  tab-bar-new-tab-choice "*scratch*")
-
+      tab-bar-new-button-show nil
+      tab-bar-new-tab-choice "*scratch*")
+(setq tab-bar-show nil)
 (global-set-key [M-left] 'tab-bar-switch-to-prev-tab)
 (global-set-key [M-right] 'tab-bar-switch-to-next-tab)
+
+(use-package tab-bar-echo-area
+  :ensure
+  :demand
+  :config
+  (tab-bar-echo-area-mode)
+  ;; tab-prefix-map (C-x t)
+  :bind (:map tab-prefix-map
+              ("c" . tab-bar-echo-area-display-tab-name)
+              ("P" . tab-bar-echo-area-display-tab-names)))
+
+;; get tab-bar name
+(defun conf/current-tab-name()
+  alist-get 'name (tab-bar--current-tab))
 
 ;;(setq-default explicit-shell-file-name "/bin/bash")
 ;;(setq-default shell-file-name "/bin/bash")
