@@ -8,6 +8,9 @@
 ;; Make frame transparency overridable
 (defvar conf/frame-transparency '(100 . 100))
 
+;; Framemove integration
+(add-to-list 'load-path "~/.emacs.d/common-libs/")
+
 ;; set keys for Apple keyboard, for emacs in OS X
 (setq mac-command-modifier 'meta)    ; make cmd key do Meta
 (setq mac-option-modifier 'super)    ; make opt key do Super
@@ -41,6 +44,10 @@
               tab-width 2)
 (setq indent-line-function 'insert-tab)
 (setq-default indent-tabs-mode nil)
+
+;; common lisp setup
+(setq byte-compile-warnings '(cl-functions))
+(require 'cl)
 
 ;; emacs as server
 (server-start)
@@ -139,8 +146,10 @@
 ;; C-c right (winner-redo)
 (winner-mode t)
 
-;; Windmove default keybindings
+;; framemove
+(require 'framemove)
 (windmove-default-keybindings)
+(setq framemove-hook-into-windmove t)
 
 (use-package switch-window
   :bind
@@ -459,18 +468,31 @@
   ;; :config
   ;; (dap-ui-mode 1)
   :commands dap-debug
-  :config
+  :config  
+  (dap-mode 1)
+  ;; The modes below are optional
+  (dap-ui-mode 1)
+  ;; enables mouse hover support
+  (dap-tooltip-mode 1)
+  ;; use tooltips for mouse hover
+  ;; if it is not enabled `dap-mode' will use the minibuffer.
+  (tooltip-mode 1)
+  ;; displays floating panel with debug buttons
+  ;; requies emacs 26+
+  (dap-ui-controls-mode 1)
   ;; Set up Node debugging
   (require 'dap-node)
   (dap-node-setup) ;; Automatically installs Node debug adapter if needed
 
   ;; Bind `C-c l d` to `dap-hydra` for easy access
   (general-define-key
-    :keymaps 'lsp-mode-map
-    :prefix lsp-keymap-prefix
-    "d" '(dap-hydra t :wk "debugger"))
+   :keymaps 'lsp-mode-map
+   :prefix lsp-keymap-prefix
+   "d" '(dap-hydra t :wk "debugger"))
   ;; c++ debugging
-  (require 'dap-cpptools))
+  (require 'dap-cpptools)
+  (dap-cpptools-setup))
+
 
 (use-package yasnippet
   :ensure t
