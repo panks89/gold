@@ -656,3 +656,11 @@
   :hook (dired-mode . dired-hide-dotfiles-mode)
   :bind (:map dired-mode-map
               ("H" . dired-hide-dotfiles-mode)))
+
+(setq map (make-sparse-keymap))
+(defun delay-exit ()
+  (interactive)
+  (save-some-buffers)
+  (sit-for 0.6)
+  (kill-emacs))
+(global-set-key (kbd "C-x C-c") 'delay-exit)

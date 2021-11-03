@@ -1319,3 +1319,14 @@ pip install --user "python-language-server[all]"
   sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-12 2
   sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clang-12 1
 #+end_src
+
+* For wslg
+#+begin_src emacs-lisp
+  (setq map (make-sparse-keymap))
+  (defun delay-exit ()
+    (interactive)
+    (save-some-buffers)
+    (sit-for 0.6)
+    (kill-emacs))
+  (global-set-key (kbd "C-x C-c") 'delay-exit)
+#+end_src
