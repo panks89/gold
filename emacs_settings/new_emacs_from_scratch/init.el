@@ -390,6 +390,17 @@
 (add-hook 'prog-mode-hook #'hs-minor-mode)
 (global-set-key (kbd "C-+") 'hs-toggle-hiding)
 
+(use-package markdown-mode
+  :ensure t
+  :commands (markdown-mode gfm-mode)
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode))
+  :init (setq markdown-command "multimarkdown"))
+(custom-set-variables
+ '(markdown-command "/usr/bin/pandoc"))
+(setq browse-url-browser-function 'eww-browse-url) ; emacs browser
+
 ;; turn on the tab-bar-mode
 ;(tab-bar-mode t)
 (setq tab-bar-close-button-show nil

@@ -669,6 +669,25 @@
   (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 #+end_src
 
+** [[https://jblevins.org/projects/markdown-mode/][markdown-mode]]
+
+#+begin_src shell :tangle no
+  sudo apt-get install pandoc
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package markdown-mode
+    :ensure t
+    :commands (markdown-mode gfm-mode)
+    :mode (("README\\.md\\'" . gfm-mode)
+           ("\\.md\\'" . markdown-mode)
+           ("\\.markdown\\'" . markdown-mode))
+    :init (setq markdown-command "multimarkdown"))
+  (custom-set-variables
+   '(markdown-command "/usr/bin/pandoc"))
+  (setq browse-url-browser-function 'eww-browse-url) ; emacs browser
+#+end_src
+
 * Tab-bar settings
 
 #+begin_src emacs-lisp
