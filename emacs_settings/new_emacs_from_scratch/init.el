@@ -399,6 +399,8 @@
   :init (setq markdown-command "multimarkdown"))
 (custom-set-variables
  '(markdown-command "/usr/bin/pandoc"))
+;; set specific browser to open links
+;;(setq browse-url-browser-function 'browse-url-firefox)
 (setq browse-url-browser-function 'eww-browse-url) ; emacs browser
 
 ;; turn on the tab-bar-mode

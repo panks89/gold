@@ -20,12 +20,14 @@ sudo make install
 
 sudo apt-get install autoconf
 sudo apt-get install texinfo
+sudo apt-get install webkit2gtk-4.0
+
 // Install other dependencies required for the build from above and
 // cd to the emacs git source code
 cd ~/workspace/emacs
 ./autogen.sh
 mkdir _build; cd _build
-../configure --prefix=/opt/emacs/
+../configure --prefix=/opt/emacs/ --with-xwidgets
 make
 sudo mkdir -p /opt/emacs/
 sudo make install
