@@ -22,13 +22,16 @@ sudo apt-get install autoconf
 sudo apt-get install texinfo
 sudo apt-get install webkit2gtk-4.0
 
+// Native JSON
+sudo apt install libjansson4 libjansson-dev
+
 // Install other dependencies required for the build from above and
 // cd to the emacs git source code
 cd ~/workspace/emacs
 ./autogen.sh
 mkdir _build; cd _build
-../configure --prefix=/opt/emacs/ --with-xwidgets
-make
+// ../configure --prefix=/opt/emacs/ --with-xwidgets
+../configure --prefix=/opt/emacs/ --with-pgtk --with-json --with-x
+make -j8
 sudo mkdir -p /opt/emacs/
 sudo make install
-
