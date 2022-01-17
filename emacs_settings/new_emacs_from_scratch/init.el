@@ -390,6 +390,19 @@
 (add-hook 'prog-mode-hook #'hs-minor-mode)
 (global-set-key (kbd "C-+") 'hs-toggle-hiding)
 
+(use-package markdown-mode
+  :ensure t
+  :commands (markdown-mode gfm-mode)
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode))
+  :init (setq markdown-command "multimarkdown"))
+(custom-set-variables
+ '(markdown-command "/usr/bin/pandoc"))
+;; set specific browser to open links
+;;(setq browse-url-browser-function 'browse-url-firefox)
+(setq browse-url-browser-function 'eww-browse-url) ; emacs browser
+
 ;; turn on the tab-bar-mode
 ;(tab-bar-mode t)
 (setq tab-bar-close-button-show nil
@@ -656,3 +669,11 @@
   :hook (dired-mode . dired-hide-dotfiles-mode)
   :bind (:map dired-mode-map
               ("H" . dired-hide-dotfiles-mode)))
+
+(setq map (make-sparse-keymap))
+(defun delay-exit ()
+  (interactive)
+  (save-some-buffers)
+  (sit-for 0.6)
+  (kill-emacs))
+(global-set-key (kbd "C-x C-c") 'delay-exit)

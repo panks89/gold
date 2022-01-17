@@ -669,6 +669,27 @@
   (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 #+end_src
 
+** [[https://jblevins.org/projects/markdown-mode/][markdown-mode]]
+
+#+begin_src shell :tangle no
+  sudo apt-get install pandoc
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package markdown-mode
+    :ensure t
+    :commands (markdown-mode gfm-mode)
+    :mode (("README\\.md\\'" . gfm-mode)
+           ("\\.md\\'" . markdown-mode)
+           ("\\.markdown\\'" . markdown-mode))
+    :init (setq markdown-command "multimarkdown"))
+  (custom-set-variables
+   '(markdown-command "/usr/bin/pandoc"))
+  ;; set specific browser to open links
+  ;;(setq browse-url-browser-function 'browse-url-firefox)
+  (setq browse-url-browser-function 'eww-browse-url) ; emacs browser
+#+end_src
+
 * Tab-bar settings
 
 #+begin_src emacs-lisp
@@ -1318,4 +1339,15 @@ pip install --user "python-language-server[all]"
   sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-10 1
   sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-12 2
   sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clang-12 1
+#+end_src
+
+* For wslg
+#+begin_src emacs-lisp
+  (setq map (make-sparse-keymap))
+  (defun delay-exit ()
+    (interactive)
+    (save-some-buffers)
+    (sit-for 0.6)
+    (kill-emacs))
+  (global-set-key (kbd "C-x C-c") 'delay-exit)
 #+end_src
