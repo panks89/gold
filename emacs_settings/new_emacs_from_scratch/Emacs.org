@@ -100,7 +100,7 @@
   (require 'use-package)
   (setq use-package-always-ensure t)
 #+end_src
-  
+
 ** Automatic Package Update
    
    The auto-package-update helps us to keep the Emacs packages up to date.
@@ -109,7 +109,7 @@
 
    You can also use M-x auto-package-update-now to update right now!
    
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (use-package auto-package-update
     :custom
     (auto-package-update-interval 7)
@@ -785,6 +785,8 @@
           company-minimum-prefix-length 1
           lsp-idle-delay 0.1)  ;; clangd is fast
     )
+  (setq lsp-clients-clangd-args
+    '("--header-insertion=never"))
 #+end_src
 
 **** lsp-ui

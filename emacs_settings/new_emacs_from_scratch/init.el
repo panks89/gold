@@ -69,15 +69,6 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
-(use-package auto-package-update
-  :custom
-  (auto-package-update-interval 7)
-  (auto-package-update-prompt-before-update t)
-  (auto-package-update-hide-results t)
-  :config
-  (auto-package-update-maybe)
-  (auto-package-update-at-time "09:00"))
-
 (setq
  inhibit-splash-screen t
  initial-scratch-message nil
@@ -459,6 +450,8 @@
         company-minimum-prefix-length 1
         lsp-idle-delay 0.1)  ;; clangd is fast
   )
+(setq lsp-clients-clangd-args
+  '("--header-insertion=never"))
 
 (use-package lsp-ui
   :hook (lsp-mode . lsp-ui-mode)
