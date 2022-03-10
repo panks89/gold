@@ -670,3 +670,5 @@
   (sit-for 0.6)
   (kill-emacs))
 (global-set-key (kbd "C-x C-c") 'delay-exit)
+
+(use-package rg)
