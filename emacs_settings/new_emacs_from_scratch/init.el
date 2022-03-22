@@ -366,7 +366,7 @@
 
 (use-package clang-format+
   :config
-  (setq clang-format-style "file")
+  ;;(setq clang-format-style "file")
   (setq clang-format-fallback-style "llvm")
   (setq clang-format-executable "/usr/local/pkg/bin/clang-format")
   (add-hook 'c-mode-common-hook #'clang-format+-mode))
