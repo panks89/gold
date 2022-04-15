@@ -100,7 +100,7 @@
   (require 'use-package)
   (setq use-package-always-ensure t)
 #+end_src
-  
+
 ** Automatic Package Update
    
    The auto-package-update helps us to keep the Emacs packages up to date.
@@ -109,7 +109,7 @@
 
    You can also use M-x auto-package-update-now to update right now!
    
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (use-package auto-package-update
     :custom
     (auto-package-update-interval 7)
@@ -634,7 +634,7 @@
 #+begin_src emacs-lisp
   (use-package clang-format+
     :config
-    (setq clang-format-style "file")
+    ;;(setq clang-format-style "file")
     (setq clang-format-fallback-style "llvm")
     (setq clang-format-executable "/usr/local/pkg/bin/clang-format")
     (add-hook 'c-mode-common-hook #'clang-format+-mode))
@@ -785,6 +785,8 @@
           company-minimum-prefix-length 1
           lsp-idle-delay 0.1)  ;; clangd is fast
     )
+  (setq lsp-clients-clangd-args
+    '("--header-insertion=never"))
 #+end_src
 
 **** lsp-ui
@@ -1342,6 +1344,7 @@ pip install --user "python-language-server[all]"
 #+end_src
 
 * For wslg
+
 #+begin_src emacs-lisp
   (setq map (make-sparse-keymap))
   (defun delay-exit ()
@@ -1351,3 +1354,18 @@ pip install --user "python-language-server[all]"
     (kill-emacs))
   (global-set-key (kbd "C-x C-c") 'delay-exit)
 #+end_src
+
+* grep/ripgrep
+
+#+begin_src shell :tangle no
+  RIPGREP_VERSION=$(curl -s "https://api.github.com/repos/BurntSushi/ripgrep/releases/latest" | grep -Po '"tag_name": "\K[0-9.]+')
+  curl -Lo ripgrep.deb "https://github.com/BurntSushi/ripgrep/releases/latest/download/ripgrep_${RIPGREP_VERSION}_amd64.deb"
+  sudo apt install -y ./ripgrep.deb
+  rg --version
+  rm -rf ripgrep.deb
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package rg)
+#+end_src
+
