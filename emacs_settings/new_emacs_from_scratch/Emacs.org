@@ -935,6 +935,13 @@ pip install --user "python-language-server[all]"
     (pyvenv-mode 1))
 #+end_src
 
+*** Java
+
+#+begin_src emacs-lisp
+  (use-package lsp-java :config (add-hook 'java-mode-hook 'lsp))
+  (use-package dap-java :ensure nil)
+#+end_src
+
 *** C++
 
     [[https://github.com/joaotavora/eglot][Eglot]]: Emacs Polyglot is an Emacs LSP client. We will keep it inactive for now.  

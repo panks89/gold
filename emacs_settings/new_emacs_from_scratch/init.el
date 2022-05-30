@@ -389,7 +389,15 @@
          ("\\.markdown\\'" . markdown-mode))
   :init (setq markdown-command "multimarkdown"))
 (custom-set-variables
- '(markdown-command "/usr/bin/pandoc"))
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   '("776c1ab52648f98893a2aa35af2afc43b8c11dd3194a052e0b2502acca02bfce" "cf922a7a5c514fad79c483048257c5d8f242b21987af0db813d3f0b138dfaf53" "1bddd01e6851f5c4336f7d16c56934513d41cc3d0233863760d1798e74809b4b" "835868dcd17131ba8b9619d14c67c127aa18b90a82438c8613586331129dda63" default))
+ '(markdown-command "/usr/bin/pandoc")
+ '(package-selected-packages
+   '(lsp-java ubuntu-theme yasnippet-snippets yaml-mode which-key vterm use-package treemacs-projectile treemacs-persp treemacs-magit treemacs-icons-dired treemacs-evil tab-bar-echo-area switch-window smex rg rainbow-delimiters pyvenv python-mode no-littering multiple-cursors lsp-ui lsp-ivy ivy-rich ivy-prescient helpful groovy-mode general forge flx evil-nerd-commenter eterm-256color eshell-git-prompt doom-themes doom-modeline dockerfile-mode dired-single dired-open dired-hide-dotfiles dap-mode counsel-projectile company-box command-log-mode cmake-mode clang-format+ auto-package-update all-the-icons-dired)))
 ;; set specific browser to open links
 ;;(setq browse-url-browser-function 'browse-url-firefox)
 (setq browse-url-browser-function 'eww-browse-url) ; emacs browser
@@ -525,6 +533,9 @@
   :after python-mode
   :config
   (pyvenv-mode 1))
+
+(use-package lsp-java :config (add-hook 'java-mode-hook 'lsp))
+(use-package dap-java :ensure nil)
 
 (use-package company
   :after lsp-mode
@@ -672,3 +683,9 @@
 (global-set-key (kbd "C-x C-c") 'delay-exit)
 
 (use-package rg)
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
